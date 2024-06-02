@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
 import os
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -27,16 +28,22 @@ def add_record():
     if not data:
         return jsonify({"error": "No data provided"}), 400
     
+
     try:
-        result = collection.insert_one({
-            'title': data.get('titleElement'),
-            'prices': data.get('price'),
-            'descriptions': data.get('descriptionElement'),
-            'images': data.get('imageElement'),
-            'url': data.get('urlElement'),
-            'category': data.get('categoryElement')
-        })
-        return jsonify({"result": str(result.inserted_id)})
+        if len(data) > 1:
+            result =  collection.insert_many(data)
+            return jsonify({"result": len(result.inserted_ids)})
+        else:
+            result = collection.insert_one({
+                'title': data.get('titleElement'),
+                'prices': data.get('price'),
+                'descriptions': data.get('descriptionElement'),
+                'images': data.get('imageElement'),
+                'url': data.get('urlElement'),
+                'category': data.get('categoryElement')
+            })
+            return jsonify({"result": str(result.inserted_id)})
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
