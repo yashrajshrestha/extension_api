@@ -33,7 +33,8 @@ def add_record():
             'prices': data.get('price'),
             'descriptions': data.get('descriptionElement'),
             'images': data.get('imageElement'),
-            'url': data.get('urlElement')
+            'url': data.get('urlElement'),
+            'category': data.get('categoryElement')
         })
         return jsonify({"result": str(result.inserted_id)})
     except Exception as e:
