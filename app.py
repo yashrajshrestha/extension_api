@@ -28,9 +28,8 @@ def add_record():
     if not data:
         return jsonify({"error": "No data provided"}), 400
     
-
     try:
-        if len(data) > 1:
+        if isinstance(data, list) and data:
             result =  collection.insert_many(data)
             return jsonify({"result": len(result.inserted_ids)})
         else:
